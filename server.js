@@ -40,6 +40,8 @@ function initializeDatabase() {
         member_list TEXT NOT NULL,
         address TEXT NOT NULL,
         phone TEXT NOT NULL,
+        aadhaar TEXT,
+        card_type TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
@@ -90,6 +92,8 @@ app.get('/api/families', (req, res) => {
             memberList: JSON.parse(row.member_list),
             address: row.address,
             phone: row.phone,
+            aadhaar: row.aadhaar,
+            cardType: row.card_type,
             createdAt: row.created_at,
             updatedAt: row.updated_at
         }));
@@ -117,6 +121,8 @@ app.get('/api/families/:id', (req, res) => {
             memberList: JSON.parse(row.member_list),
             address: row.address,
             phone: row.phone,
+            aadhaar: row.aadhaar,
+            cardType: row.card_type,
             createdAt: row.created_at,
             updatedAt: row.updated_at
         });
@@ -143,6 +149,8 @@ app.get('/api/families/by-family-id/:familyId', (req, res) => {
             memberList: JSON.parse(row.member_list),
             address: row.address,
             phone: row.phone,
+            aadhaar: row.aadhaar,
+            cardType: row.card_type,
             createdAt: row.created_at,
             updatedAt: row.updated_at
         });
@@ -151,7 +159,7 @@ app.get('/api/families/by-family-id/:familyId', (req, res) => {
 
 // Create family
 app.post('/api/families', (req, res) => {
-    const { familyId, headOfFamily, numMembers, memberList, address, phone } = req.body;
+    const { familyId, headOfFamily, numMembers, memberList, address, phone, aadhaar, cardType } = req.body;
 
     if (!familyId || !headOfFamily || !numMembers || !memberList || !address || !phone) {
         res.status(400).json({ error: 'All fields are required' });
@@ -159,8 +167,8 @@ app.post('/api/families', (req, res) => {
     }
 
     db.run(
-        'INSERT INTO families (family_id, head_of_family, num_members, member_list, address, phone) VALUES (?, ?, ?, ?, ?, ?)',
-        [familyId, headOfFamily, numMembers, JSON.stringify(memberList), address, phone],
+        'INSERT INTO families (family_id, head_of_family, num_members, member_list, address, phone, aadhaar, card_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        [familyId, headOfFamily, numMembers, JSON.stringify(memberList), address, phone, aadhaar, cardType],
         function(err) {
             if (err) {
                 if (err.message.includes('UNIQUE constraint failed')) {
@@ -177,7 +185,9 @@ app.post('/api/families', (req, res) => {
                 numMembers,
                 memberList,
                 address,
-                phone
+                phone,
+                aadhaar,
+                cardType
             });
         }
     );
@@ -186,7 +196,7 @@ app.post('/api/families', (req, res) => {
 // Update family
 app.put('/api/families/:id', (req, res) => {
     const id = req.params.id;
-    const { familyId, headOfFamily, numMembers, memberList, address, phone } = req.body;
+    const { familyId, headOfFamily, numMembers, memberList, address, phone, aadhaar, cardType } = req.body;
 
     if (!familyId || !headOfFamily || !numMembers || !memberList || !address || !phone) {
         res.status(400).json({ error: 'All fields are required' });
@@ -194,8 +204,8 @@ app.put('/api/families/:id', (req, res) => {
     }
 
     db.run(
-        'UPDATE families SET family_id = ?, head_of_family = ?, num_members = ?, member_list = ?, address = ?, phone = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-        [familyId, headOfFamily, numMembers, JSON.stringify(memberList), address, phone, id],
+        'UPDATE families SET family_id = ?, head_of_family = ?, num_members = ?, member_list = ?, address = ?, phone = ?, aadhaar = ?, card_type = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+        [familyId, headOfFamily, numMembers, JSON.stringify(memberList), address, phone, aadhaar, cardType, id],
         function(err) {
             if (err) {
                 if (err.message.includes('UNIQUE constraint failed')) {
@@ -545,4 +555,5 @@ process.on('SIGINT', () => {
         process.exit(0);
     });
 });
+
 

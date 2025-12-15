@@ -134,8 +134,14 @@ function showError(message) {
     alert(message);
 }
 
-// Note: localStorage initialization removed - now using backend API
-// Keep formatDate and formatCurrency functions for UI
+// Show logged in username in navbar if present
+document.addEventListener('DOMContentLoaded', () => {
+    const el = document.getElementById('navUsername');
+    if (el && typeof getLoggedInUser === 'function') {
+        const u = getLoggedInUser();
+        if (u) el.textContent = u;
+    }
+});
 
 
 

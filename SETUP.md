@@ -61,3 +61,7 @@ http://localhost:3000
 2. Check if npm is installed: `npm --version`
 3. Make sure you're in the project directory when running commands
 
+
+
+
+

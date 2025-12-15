@@ -92,6 +92,14 @@ function displayFamilyDetails(family) {
             <div class="family-detail-value">${family.headOfFamily}</div>
         </div>
         <div class="family-detail-item">
+            <div class="family-detail-label">Smart Card Type</div>
+            <div class="family-detail-value">${family.cardType || '-'}</div>
+        </div>
+        <div class="family-detail-item">
+            <div class="family-detail-label">Aadhaar</div>
+            <div class="family-detail-value">${family.aadhaar || '-'}</div>
+        </div>
+        <div class="family-detail-item">
             <div class="family-detail-label">Number of Members</div>
             <div class="family-detail-value">${family.numMembers}</div>
         </div>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Ration Store Management</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="auth-body">
+    <div class="auth-container">
+        <div class="auth-card">
+            <h2>Ration Store Login</h2>
+            <div class="auth-toggle">
+                <button id="loginTab" class="auth-tab active">Login</button>
+                <button id="registerTab" class="auth-tab">Create Account</button>
+            </div>
+            <form id="authForm">
+                <div class="form-group">
+                    <label for="authUsername">Username</label>
+                    <input type="text" id="authUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="authPassword">Password</label>
+                    <input type="password" id="authPassword" required>
+                </div>
+                <div class="form-group" id="confirmGroup" style="display:none;">
+                    <label for="authConfirmPassword">Confirm Password</label>
+                    <input type="password" id="authConfirmPassword">
+                </div>
+                <div id="authError" class="auth-error" style="display:none;"></div>
+                <button type="submit" class="btn btn-primary" id="authSubmitBtn">Login</button>
+            </form>
+        </div>
+    </div>
+    <script src="js/auth.js"></script>
+</body>
+</html>
+
+
+
+

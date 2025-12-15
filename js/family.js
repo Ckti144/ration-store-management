@@ -80,6 +80,8 @@ async function handleFormSubmit(e) {
     const headOfFamily = document.getElementById('headOfFamily').value.trim();
     const numMembers = parseInt(document.getElementById('numMembers').value);
     const address = document.getElementById('address').value.trim();
+    const aadhaar = document.getElementById('aadhaar').value.trim();
+    const cardType = document.getElementById('cardType').value;
     const phone = document.getElementById('phone').value.trim();
     
     // Get member names
@@ -106,7 +108,9 @@ async function handleFormSubmit(e) {
         numMembers: memberList.length,
         memberList: memberList,
         address: address,
-        phone: phone
+        phone: phone,
+        aadhaar: aadhaar,
+        cardType: cardType
     };
     
     try {
@@ -142,6 +146,8 @@ async function editFamily(id) {
         document.getElementById('numMembers').value = family.numMembers;
         document.getElementById('address').value = family.address;
         document.getElementById('phone').value = family.phone;
+        document.getElementById('aadhaar').value = family.aadhaar || '';
+        document.getElementById('cardType').value = family.cardType || '';
         
         // Populate member list
         memberListContainer.innerHTML = '';
@@ -185,25 +191,34 @@ async function deleteFamily(id) {
  */
 async function renderFamilyTable() {
     try {
-        const families = await familiesAPI.getAll();
+        const [families, sales] = await Promise.all([
+            familiesAPI.getAll(),
+            salesAPI.getAll()
+        ]);
         const tbody = document.getElementById('familyTableBody');
         
         if (families.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No families registered yet. Click "Add Family" to register.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No families registered yet. Click "Add Family" to register.</td></tr>';
             return;
         }
-        
+
+        const familiesWithSales = new Set(sales.map(s => s.familyId));
+
         tbody.innerHTML = families.map(family => {
             const members = family.memberList.join(', ');
+            const headClass = familiesWithSales.has(family.familyId) ? '' : 'no-purchase';
             return `
                 <tr>
                     <td>${family.familyId}</td>
-                    <td>${family.headOfFamily}</td>
+                    <td class="${headClass}">${family.headOfFamily}</td>
                     <td>${members}</td>
+                    <td>${family.cardType || '-'}</td>
+                    <td>${family.aadhaar || '-'}</td>
                     <td>${family.phone}</td>
                     <td>${family.address}</td>
                     <td>
                         <button class="btn btn-sm btn-primary" onclick="editFamily('${family.id}')">Edit</button>
+                        <button class="btn btn-sm btn-secondary" onclick="showSmartCard('${family.id}')">Smart Card</button>
                         <button class="btn btn-sm btn-danger" onclick="deleteFamily('${family.id}')">Delete</button>
                     </td>
                 </tr>
@@ -211,8 +226,40 @@ async function renderFamilyTable() {
         }).join('');
     } catch (error) {
         console.error('Error loading families:', error);
-        document.getElementById('familyTableBody').innerHTML = '<tr><td colspan="6" class="empty-state">Error loading families. Make sure the server is running.</td></tr>';
+        document.getElementById('familyTableBody').innerHTML = '<tr><td colspan="8" class="empty-state">Error loading families. Make sure the server is running.</td></tr>';
     }
+}
+
+// Smart card display
+let smartCardModal = document.getElementById('smartCardModal');
+let smartCardBody = document.getElementById('smartCardBody');
+
+async function showSmartCard(id) {
+    try {
+        const family = await familiesAPI.getById(id);
+        smartCardBody.innerHTML = `
+            <p><strong>Family ID:</strong> ${family.familyId}</p>
+            <p><strong>Head of Family:</strong> ${family.headOfFamily}</p>
+            <p><strong>Card Type:</strong>
+                <span class="card-type-badge card-type-${(family.cardType || '').replace(' ', '\\ ')}">${family.cardType || 'N/A'}</span>
+            </p>
+            <p><strong>Aadhaar:</strong> ${family.aadhaar || 'N/A'}</p>
+            <canvas id="smartCardQr" class="smart-card-qr"></canvas>
+        `;
+        const qrCanvas = document.getElementById('smartCardQr');
+        new QRious({
+            element: qrCanvas,
+            value: family.familyId,
+            size: 180
+        });
+        smartCardModal.style.display = 'block';
+    } catch (err) {
+        showError('Cannot load smart card details.');
+    }
+}
+
+function closeSmartCard() {
+    if (smartCardModal) smartCardModal.style.display = 'none';
 }
 
 // Update member count when number of members changes
