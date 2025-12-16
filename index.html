@@ -29,19 +29,24 @@
     <div class="container">
         <!-- Dashboard Content -->
         <main class="main-content">
-            <h2 class="page-title">Dashboard</h2>
+            <!-- Dashboard Overview Section -->
+            <div class="section-header">
+                <h2 class="section-title">DASHBOARD OVERVIEW</h2>
+                <p class="section-subtitle">Quick view of your ration store management</p>
+            </div>
             
             <!-- Stats Cards -->
             <div class="cards-grid" id="dashboardCards">
-                <div class="card stat-card">
+                <div class="card stat-card card-green">
                     <div class="card-icon">📦</div>
                     <div class="card-content">
                         <h3>Total Stock Items</h3>
                         <p class="stat-value" id="totalStockItems">0</p>
+                        <p class="stat-subtitle">Current available items</p>
                     </div>
                 </div>
                 
-                <div class="card stat-card">
+                <div class="card stat-card card-red">
                     <div class="card-icon">💰</div>
                     <div class="card-content">
                         <h3>Today's Sales</h3>
@@ -50,24 +55,31 @@
                     </div>
                 </div>
                 
-                <div class="card stat-card">
+                <div class="card stat-card card-green">
                     <div class="card-icon">👨‍👩‍👧‍👦</div>
                     <div class="card-content">
                         <h3>Registered Families</h3>
                         <p class="stat-value" id="registeredFamilies">0</p>
+                        <p class="stat-subtitle">Total registered families</p>
                     </div>
                 </div>
                 
-                <div class="card stat-card">
+                <div class="card stat-card card-red">
                     <div class="card-icon">⚠️</div>
                     <div class="card-content">
                         <h3>Low Stock Items</h3>
                         <p class="stat-value" id="lowStockItems">0</p>
+                        <p class="stat-subtitle">Items need restocking</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Quick Stock Status Table -->
+            <!-- Quick Stock Status Section -->
+            <div class="section-header">
+                <h2 class="section-title">- QUICK STOCK STATUS</h2>
+                <p class="section-subtitle">Monitor your stock levels in real time</p>
+            </div>
+            
             <div class="card">
                 <div class="card-header">
                     <h3>Quick Stock Status</h3>
@@ -92,7 +104,12 @@
                 </div>
             </div>
 
-            <!-- Low Stock Alert Table -->
+            <!-- Low Stock Alerts Section -->
+            <div class="section-header">
+                <h2 class="section-title">- LOW STOCK ALERTS</h2>
+                <p class="section-subtitle">Items that need immediate attention</p>
+            </div>
+            
             <div class="card">
                 <div class="card-header">
                     <h3>Low Stock Alerts</h3>
@@ -126,6 +143,7 @@
     <script src="js/dashboard.js"></script>
 </body>
 </html>
+
 
 
 
